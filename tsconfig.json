@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "outDir": "./dist",
+      "target": "es2022",
+      "module": "Node16",
+      "allowSyntheticDefaultImports": true,
+      "experimentalDecorators": true,
+      "typeRoots": ["./node_modules/@types", "./types"],
+      "sourceMap": true,
+      "emitDecoratorMetadata": true
+    },
+  }

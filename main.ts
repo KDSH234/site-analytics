@@ -1,9 +1,10 @@
 import { Core } from './core.js';
 import { SettingsService } from './src/services/settings.service.js';
 import { AuthService } from './src/api/auth.service.js';
+import { ErrorService } from './src/api/error.service.js';
 import { Application } from './src/index.js';
 
 new Core({
-    providers: [SettingsService, AuthService],
+    providers: [ErrorService, SettingsService, AuthService],
     modules: [Application]
 });

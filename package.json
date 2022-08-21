@@ -4,9 +4,9 @@
     "description": "",
     "main": "main.ts",
     "scripts": {
-        "start-live": "nodemon",
+        "start": "nodemon",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "npm run build && node dist/main.js",
+        "start-dev": "npm run build && node dist/main.js",
         "build": "tsc"
     },
     "type": "module",

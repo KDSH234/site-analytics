@@ -3,6 +3,7 @@ import { MongoClient } from 'mongodb';
 import { SettingsService } from './services/settings.service.js';
 import { AuthService } from './api/auth.service.js';
 import { ErrorService } from './api/error.service.js';
+import { StatisticService } from './api/statistic.serivce.js';
 import { from, Observable } from 'rxjs';
 
 @Injector()
@@ -10,14 +11,15 @@ export class Application {
     private app = Express();
     private DB: Observable<MongoClient>;
 
-    constructor(private settings: SettingsService, private authService: AuthService, private err: ErrorService) {
+    constructor(private settings: SettingsService, private authService: AuthService, private err: ErrorService, private statisticService: StatisticService) {
         this.app.use(Express.json()) // for parsing application/json
         //register all rotuers
         this.app.use('/api/auth', this.authService.router);
+        this.app.use('/api/statistic', this.statisticService.router);
 
         this.app.use(function(err, req, res, next) {
             console.error(err.stack);
-            this.err.crash(res, 'Something is wrong!');
+            this.err.error(res, 1)
         });
         
         //run DB

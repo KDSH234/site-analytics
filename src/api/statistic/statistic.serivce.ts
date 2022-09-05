@@ -9,6 +9,7 @@ import * as https from 'node:https';
 import { ObjectId } from 'mongodb';
 import { checkSchema } from 'express-validator';
 import { skipWhile, take } from "rxjs/operators";
+import { hrtime } from 'node:process';
 
 @Injector()
 export class StatisticService {
@@ -28,7 +29,6 @@ export class StatisticService {
         this.settingsService.DBReady.pipe(skipWhile(val => !val), take(1)).subscribe(state => {
             this.settingsService.getTable<SiteDBModel>('Site').find({}).forEach(site => {
                 site.calls?.forEach(call => {
-                    console.log(call.type);
                     this.schedulerService.addActive(call.name, this.schedulerService.getCronSettings(call.type), (d) => {
                         this.makeCall(call, d);
                     });
@@ -45,21 +45,24 @@ export class StatisticService {
                 'Content-Type': 'application/json',
             },
         };
+        const startTime = this.schedulerService.convertHrtime(hrtime.bigint());
         const req = https.request(call.url + '?' + call.qParams, options, (res) => {
-            this.writeCall(call, res, date);
+            this.writeCall(call, res, date, startTime.milliseconds);
         });
 
         req.on('error', (e) => {
             console.error(e);
-            this.writeCall(call, {}, date);
+            this.writeCall(call, {}, date, startTime.milliseconds);
         });
         req.end();
     }
 
-    async writeCall(call: SiteCall, res: any, date: string) {
+    async writeCall(call: SiteCall, res: any, date: string, startTime: number) {
+        const endTime = this.schedulerService.convertHrtime(hrtime.bigint());
         let d = new Date(date);
         const table = this.settingsService.getTable<CallResult>('SiteCalls');
-        let obj: any = {date: d, siteCall_id: call._id, result: res.statusCode || 'UNKNOWN'};
+        const timing = endTime.milliseconds - startTime;
+        let obj: CallResult = {date: d, siteCall_id: call._id, result: res.statusCode || 'UNKNOWN', timing};
         console.log(obj);
         table.insertOne(obj);
     }

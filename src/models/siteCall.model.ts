@@ -43,7 +43,8 @@ export class CallResult {
     _id?: ObjectId;
     siteCall_id: ObjectId;
     result: string;
-    date: number;
+    date: Date;
+    timing: number;
 }
 
 export const SiteCallAddValidation: Schema = {

@@ -1,10 +1,11 @@
 import Express from 'express';
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import { SettingsService } from './services/settings.service.js';
 import { AuthService } from './api/auth/auth.service.js';
 import { ErrorService } from './api/error.service.js';
 import { StatisticService } from './api/statistic/statistic.serivce.js';
 import { CallsService } from './api/calls/calls.service.js';
+import { CallResult } from './models/siteCall.model.js';
 import { from, Observable } from 'rxjs';
 
 @Injector()

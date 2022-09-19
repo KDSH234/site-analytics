@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { SettingsService } from '../../services/settings.service.js';
 import { ErrorService } from '../error.service.js';
-import { SchedulerService } from '../scheduler/scheduler.service.js';
+import { SchedulerService } from '../../services/scheduler.service.js';
 import { SiteDBModel, SiteAddValidation, SitePutValidation } from '../../models/site.model.js';
 import { CallResult, SiteCall } from '../../models/siteCall.model.js';
 import { ObjectIdValidator } from '../../models/validation.model.js';
@@ -32,7 +32,6 @@ export class StatisticService {
                     this.schedulerService.addActive(call.name, this.schedulerService.getCronSettings(call.type), (d) => {
                         this.makeCall(call, d);
                     });
-                    
                 })
             });
         })
@@ -63,7 +62,6 @@ export class StatisticService {
         const table = this.settingsService.getTable<CallResult>('SiteCalls');
         const timing = endTime.milliseconds - startTime;
         let obj: CallResult = {date: d, siteCall_id: call._id, result: res.statusCode || 'UNKNOWN', timing};
-        console.log(obj);
         table.insertOne(obj);
     }
 
